@@ -1,0 +1,122 @@
+class Personaje:
+    nombre = "Default"
+    fuerza = 0
+    inteligencia = 0
+    defensa = 0
+    vida = 0
+    
+    def __init__(self, nombre, fuerza, inteligencia, defensa, vida):
+        self.nombre = nombre
+        self.fuerza = fuerza
+        self.inteligencia = inteligencia
+        self.defensa = defensa
+        self.vida = vida
+        
+    def atributos(self):
+        print(self.nombre, ":", sep="")
+        print(".Fuerza", self.fuerza)
+        print(".Inteligencia", self.inteligencia)
+        print(".Defensa", self.defensa)
+        print(".Vida", self.vida)
+        
+    def subir_nivel(self, fuerza, inteligencia, defensa):
+        self.fuerza = self.fuerza + fuerza
+        self.inteligencia = self.inteligencia + inteligencia
+        self.defensa = self.defensa + defensa
+        
+    def esta_vivo(self):
+        return self.vida > 0
+    
+    def morir(self):
+        self.vida = 0
+        print(self.nombre, "Ha muerto")
+        
+    def daño(self, enemigo):
+        return self.fuerza - enemigo.defensa
+    
+    def atacar(self, enemigo):
+        daño = self.daño(enemigo)
+        enemigo.vida = enemigo.vida - daño
+        print(self.nombre, "Ha realizado", daño, "puntos de daño a", enemigo.nombre)
+        if enemigo.esta_vivo():
+            print("La vida de", enemigo.nombre, "es", enemigo.vida)
+        else:
+            enemigo.morir()
+
+personajes_disponibles = []  
+
+class Guerrero(Personaje):
+    def __init__(self, nombre, fuerza= 100, inteligencia= 10, defensa= 50, vida= 2000):
+        super().__init__(nombre, fuerza, inteligencia, defensa, vida)
+    
+    def atributos(self):
+        super().atributos()
+        
+    def daño(self, enemigo):
+        return self.fuerza - enemigo.defensa
+    
+class Mago(Personaje):
+    def __init__(self, nombre, fuerza=150, inteligencia=50, defensa=40, vida=2000):
+        super().__init__(nombre, fuerza, inteligencia, defensa, vida)
+        
+    def atributos(self):
+        super().atributos()    
+    
+    def daño(self, enemigo):
+        return self.fuerza - enemigo.defensa
+    
+guerrero = Guerrero("Guerrero")
+mago = Mago("Mago")
+personajes_disponibles.append(guerrero)
+personajes_disponibles.append(mago)
+
+def combate(jugador_1, jugador_2):
+    turno = 0
+    while jugador_1.esta_vivo() and jugador_2.esta_vivo():
+        print("\nTurno", turno)
+        print(">>> Acción de ", jugador_1.nombre, ":", sep="")
+        jugador_1.atacar(jugador_2)
+        print(">>> Acción de ", jugador_2.nombre, ":", sep="")
+        jugador_2.atacar(jugador_1)
+        turno = turno + 1
+    if jugador_1.esta_vivo():
+        print("\nHa ganado", jugador_1.nombre)
+    elif jugador_2.esta_vivo():
+        print("\nHa ganado", jugador_2.nombre)
+    else:
+        print("\nEmpate")
+
+while True:
+    print("Selecciona un personaje:")
+    print("Si desea salir presione la tecla F")
+    for index, personaje in enumerate(personajes_disponibles):
+        print(f"{index + 1}. {personaje.nombre}")
+
+    opcion = input("Ingrese el número del personaje que desea seleccionar: ")
+    
+    if opcion.upper() == "F":
+        print("Saliendo del programa...")
+        break  
+    
+    try:
+        opcion = int(opcion)
+        if 1 <= opcion <= len(personajes_disponibles):
+            personaje_elegido = personajes_disponibles[opcion - 1]
+            print(f"Has seleccionado: {personaje_elegido.nombre}")
+            
+            oponente = None
+            for index, personaje in enumerate(personajes_disponibles):
+                if index != opcion - 1:
+                    oponente = personaje
+                    break
+            
+            if oponente is not None:
+                print(f"Combate contra: {oponente.nombre}")
+                combate(personaje_elegido, oponente)
+                 
+            else:
+                print("No se pudo encontrar un oponente.")
+        else:
+            print("Opción inválida. Por favor, ingrese un número válido.")
+    except ValueError:
+        print("Por favor, ingrese un número válido.")
