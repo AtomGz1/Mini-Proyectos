@@ -19,10 +19,10 @@ class Personaje:
         print(".Defensa", self.defensa)
         print(".Vida", self.vida)
         
-    def subir_nivel(self, fuerza, inteligencia, defensa):
-        self.fuerza = self.fuerza + fuerza
-        self.inteligencia = self.inteligencia + inteligencia
-        self.defensa = self.defensa + defensa
+    #def subir_nivel(self, fuerza, inteligencia, defensa):
+        #self.fuerza = self.fuerza + fuerza
+        #self.inteligencia = self.inteligencia + inteligencia
+        #self.defensa = self.defensa + defensa
         
     def esta_vivo(self):
         return self.vida > 0
